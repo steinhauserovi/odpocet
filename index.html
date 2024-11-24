@@ -9,13 +9,22 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
-            background-color: #f9f9f9; /* Jemná barva pozadí */
+            background-color: #f9f9f9;
+            min-height: 100vh; /* Celá výška okna */
+            margin: 0;
+            overflow: hidden; /* Skryje posuvníky */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
         }
         .countdown-container {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Zajištění přetékání na další řádky */
             justify-content: center;
             gap: 20px;
+            max-width: 100%; /* Maximální šířka */
+            overflow: auto; /* Povolení horizontálního přetékání při hodně prvcích */
         }
         .countdown {
             border: 1px solid #ddd;
@@ -25,6 +34,7 @@
             text-align: center;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
             color: white;
+            flex: 1 0 200px; /* Flexibilní šířka s minimem 200px */
         }
         h1 {
             color: #333;
@@ -36,9 +46,9 @@
         .button-container, .rounding-container {
             display: flex;
             justify-content: center;
-            flex-wrap: wrap;
+            flex-wrap: wrap; /* Přetékání na další řádky u tlačítek */
             gap: 10px;
-            margin: 20px;
+            margin: 10px;
         }
         .button-container button, .rounding-container button {
             padding: 10px 20px;
@@ -56,18 +66,24 @@
         .button-container button.active, .rounding-container button.active {
             background-color: #0056b3;
         }
+        .footer {
+            margin-top: auto;
+            padding: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
         /* Barvy pro různé události */
         .countdown.novy-rok {
-            background-color: #FF5733; /* Oranžová */
+            background-color: #FF5733;
         }
         .countdown.vanoce {
-            background-color: #28A745; /* Zelená */
+            background-color: #28A745;
         }
         .countdown.narozeniny {
-            background-color: #17A2B8; /* Modrozelená */
+            background-color: #17A2B8;
         }
         .countdown.specialni {
-            background-color: #FFC107; /* Žlutá */
+            background-color: #FFC107;
             color: black;
         }
     </style>
@@ -88,6 +104,9 @@
     <div id="countdowns" class="countdown-container">
         <!-- Odpočty budou generovány zde -->
     </div>
+    <div class="footer">
+        © 2024 Vaše stránka s odpočty
+    </div>
 
     <script>
         const countdownData = [
@@ -102,7 +121,7 @@
         const buttons = document.querySelectorAll(".button-container button");
         const roundingToggle = document.getElementById("rounding-toggle");
         let selectedFormat = "default";
-        let isRounded = true; // Výchozí hodnota: zaokrouhlit
+        let isRounded = true;
 
         function updateCountdowns() {
             const container = document.getElementById("countdowns");
