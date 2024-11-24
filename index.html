@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+            background-color: #f9f9f9; /* Jemná barva pozadí */
         }
         .countdown-container {
             display: flex;
@@ -32,13 +33,13 @@
             font-size: 1.2em;
             font-weight: bold;
         }
-        .button-container {
+        .button-container, .rounding-container {
             display: flex;
             justify-content: center;
             gap: 10px;
             margin: 20px;
         }
-        .button-container button {
+        .button-container button, .rounding-container button {
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -48,10 +49,10 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
-        .button-container button:hover {
+        .button-container button:hover, .rounding-container button:hover {
             background-color: #0056b3;
         }
-        .button-container button.active {
+        .button-container button.active, .rounding-container button.active {
             background-color: #0056b3;
         }
         /* Barvy pro různé události */
@@ -80,6 +81,9 @@
         <button data-format="months">Měsíce</button>
         <button data-format="years">Roky</button>
     </div>
+    <div class="rounding-container">
+        <button id="rounding-toggle" class="active">Zaokrouhlit</button>
+    </div>
     <div id="countdowns" class="countdown-container">
         <!-- Odpočty budou generovány zde -->
     </div>
@@ -95,7 +99,9 @@
         ];
 
         const buttons = document.querySelectorAll(".button-container button");
+        const roundingToggle = document.getElementById("rounding-toggle");
         let selectedFormat = "default";
+        let isRounded = true; // Výchozí hodnota: zaokrouhlit
 
         function updateCountdowns() {
             const container = document.getElementById("countdowns");
@@ -130,19 +136,19 @@
 
                     switch (selectedFormat) {
                         case "hours":
-                            timeDisplay = `${hours.toFixed(2)} hodin`;
+                            timeDisplay = isRounded ? `${Math.round(hours)} hodin` : `${hours.toFixed(2)} hodin`;
                             break;
                         case "days":
-                            timeDisplay = `${days.toFixed(2)} dní`;
+                            timeDisplay = isRounded ? `${Math.round(days)} dní` : `${days.toFixed(2)} dní`;
                             break;
                         case "weeks":
-                            timeDisplay = `${weeks.toFixed(2)} týdnů`;
+                            timeDisplay = isRounded ? `${Math.round(weeks)} týdnů` : `${weeks.toFixed(2)} týdnů`;
                             break;
                         case "months":
-                            timeDisplay = `${months.toFixed(2)} měsíců`;
+                            timeDisplay = isRounded ? `${Math.round(months)} měsíců` : `${months.toFixed(2)} měsíců`;
                             break;
                         case "years":
-                            timeDisplay = `${years.toFixed(2)} let`;
+                            timeDisplay = isRounded ? `${Math.round(years)} let` : `${years.toFixed(2)} let`;
                             break;
                         default:
                             const remainingDays = Math.floor(days);
@@ -177,7 +183,16 @@
             updateCountdowns();
         }
 
+        function toggleRounding() {
+            isRounded = !isRounded;
+            roundingToggle.classList.toggle("active", isRounded);
+            roundingToggle.textContent = isRounded ? "Zaokrouhlit" : "Nezaokrouhlit";
+            updateCountdowns();
+        }
+
         buttons.forEach(button => button.addEventListener("click", handleButtonClick));
+        roundingToggle.addEventListener("click", toggleRounding);
+
         setInterval(updateCountdowns, 1000);
         updateCountdowns();
     </script>
