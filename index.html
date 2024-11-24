@@ -23,13 +23,14 @@
             width: 200px;
             text-align: center;
             box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            color: white;
         }
         h1 {
             color: #333;
         }
         .time {
             font-size: 1.2em;
-            color: #007BFF;
+            font-weight: bold;
         }
         .button-container {
             display: flex;
@@ -53,10 +54,24 @@
         .button-container button.active {
             background-color: #0056b3;
         }
+        /* Barvy pro různé události */
+        .countdown.novy-rok {
+            background-color: #FF5733; /* Oranžová */
+        }
+        .countdown.vanoce {
+            background-color: #28A745; /* Zelená */
+        }
+        .countdown.narozeniny {
+            background-color: #17A2B8; /* Modrozelená */
+        }
+        .countdown.specialni {
+            background-color: #FFC107; /* Žlutá */
+            color: black;
+        }
     </style>
 </head>
 <body>
-    <h1>Odpočty do různých dat</h1>
+    <h1>Odpočty:</h1>
     <div class="button-container">
         <button data-format="default" class="active">Standardní</button>
         <button data-format="hours">Hodiny</button>
@@ -71,12 +86,12 @@
 
     <script>
         const countdownData = [
-            { title: "Nový  rok", date: "01-01", recurring: true },
-            { title: "Vánoce", date: "12-24", recurring: true },
-            { title: "Janka narozeniny", date: "05-17", recurring: true },
-            { title: "Václav narozeniny", date: "05-07", recurring: true },
-            { title: "Václav V", date: "2026-07-07", recurring: false },
-            { title: "Václav N", date: "2027-05-07", recurring: false },
+            { title: "Nový rok", date: "01-01", recurring: true, type: "novy-rok" },
+            { title: "Vánoce", date: "12-24", recurring: true, type: "vanoce" },
+            { title: "Janka narozeniny", date: "05-17", recurring: true, type: "narozeniny" },
+            { title: "Václav narozeniny", date: "05-07", recurring: true, type: "narozeniny" },
+            { title: "Vašíček V", date: "2026-07-07", recurring: false, type: "specialni" },
+            { title: "Vašíček N", date: "2027-05-07", recurring: false, type: "specialni" },
         ];
 
         const buttons = document.querySelectorAll(".button-container button");
@@ -138,7 +153,7 @@
                     }
 
                     const countdownHTML = `
-                        <div class="countdown">
+                        <div class="countdown ${event.type}">
                             <h2>${event.title}</h2>
                             <p class="time">${timeDisplay}</p>
                         </div>
@@ -146,7 +161,7 @@
                     container.innerHTML += countdownHTML;
                 } else {
                     container.innerHTML += `
-                        <div class="countdown">
+                        <div class="countdown ${event.type}">
                             <h2>${event.title}</h2>
                             <p class="time">Událost již proběhla!</p>
                         </div>
@@ -156,24 +171,15 @@
         }
 
         function handleButtonClick(event) {
-            // Odstranění aktivní třídy ze všech tlačítek
             buttons.forEach(button => button.classList.remove("active"));
-
-            // Přidání aktivní třídy na aktuální tlačítko
             event.target.classList.add("active");
-
-            // Aktualizace vybraného formátu
             selectedFormat = event.target.getAttribute("data-format");
-
-            // Aktualizace odpočtů
             updateCountdowns();
         }
 
-        // Přidání posluchačů kliknutí na tlačítka
         buttons.forEach(button => button.addEventListener("click", handleButtonClick));
-
-        setInterval(updateCountdowns, 1000); // Aktualizace každou sekundu
-        updateCountdowns(); // Inicializace
+        setInterval(updateCountdowns, 1000);
+        updateCountdowns();
     </script>
 </body>
 </html>
