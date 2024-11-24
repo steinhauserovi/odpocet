@@ -31,23 +31,39 @@
             font-size: 1.2em;
             color: #007BFF;
         }
-        .format-selector {
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
             margin: 20px;
+        }
+        .button-container button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button-container button:hover {
+            background-color: #0056b3;
+        }
+        .button-container button.active {
+            background-color: #0056b3;
         }
     </style>
 </head>
 <body>
     <h1>Odpočty do různých dat</h1>
-    <div class="format-selector">
-        <label for="format">Vyberte formát zobrazení:</label>
-        <select id="format">
-            <option value="default">Standardní (dny, hodiny, minuty, sekundy)</option>
-            <option value="hours">Hodiny (desetinná)</option>
-            <option value="days">Dny (desetinná)</option>
-            <option value="weeks">Týdny (desetinná)</option>
-            <option value="months">Měsíce (desetinná)</option>
-            <option value="years">Roky (desetinná)</option>
-        </select>
+    <div class="button-container">
+        <button data-format="default" class="active">Standardní</button>
+        <button data-format="hours">Hodiny</button>
+        <button data-format="days">Dny</button>
+        <button data-format="weeks">Týdny</button>
+        <button data-format="months">Měsíce</button>
+        <button data-format="years">Roky</button>
     </div>
     <div id="countdowns" class="countdown-container">
         <!-- Odpočty budou generovány zde -->
@@ -55,33 +71,32 @@
 
     <script>
         const countdownData = [
+            { title: "Nový  rok", date: "01-01", recurring: true },
             { title: "Vánoce", date: "12-24", recurring: true },
             { title: "Janka narozeniny", date: "05-17", recurring: true },
             { title: "Václav narozeniny", date: "05-07", recurring: true },
-            { title: "První dítě", date: "2026-08-07", recurring: false }
+            { title: "Václav V", date: "2026-07-07", recurring: false },
+            { title: "Václav N", date: "2027-05-07", recurring: false },
         ];
 
-        const formatSelector = document.getElementById("format");
+        const buttons = document.querySelectorAll(".button-container button");
+        let selectedFormat = "default";
 
         function updateCountdowns() {
             const container = document.getElementById("countdowns");
             container.innerHTML = '';
-            const selectedFormat = formatSelector.value;
 
             countdownData.forEach(event => {
                 const now = new Date();
                 let targetDate;
 
                 if (event.recurring) {
-                    // Pokud je událost opakující se, vytvořte datum pro aktuální nebo příští rok
                     const currentYear = now.getFullYear();
                     targetDate = new Date(`${currentYear}-${event.date}`);
                     if (targetDate < now) {
-                        // Pokud již proběhla, nastavte na příští rok
                         targetDate = new Date(`${currentYear + 1}-${event.date}`);
                     }
                 } else {
-                    // Neopakující se událost
                     targetDate = new Date(event.date);
                 }
 
@@ -93,8 +108,8 @@
                     const hours = minutes / 60;
                     const days = hours / 24;
                     const weeks = days / 7;
-                    const months = days / 30.44; // průměrná délka měsíce
-                    const years = days / 365.25; // průměrná délka roku
+                    const months = days / 30.44;
+                    const years = days / 365.25;
 
                     let timeDisplay = '';
 
@@ -140,7 +155,23 @@
             });
         }
 
-        formatSelector.addEventListener("change", updateCountdowns);
+        function handleButtonClick(event) {
+            // Odstranění aktivní třídy ze všech tlačítek
+            buttons.forEach(button => button.classList.remove("active"));
+
+            // Přidání aktivní třídy na aktuální tlačítko
+            event.target.classList.add("active");
+
+            // Aktualizace vybraného formátu
+            selectedFormat = event.target.getAttribute("data-format");
+
+            // Aktualizace odpočtů
+            updateCountdowns();
+        }
+
+        // Přidání posluchačů kliknutí na tlačítka
+        buttons.forEach(button => button.addEventListener("click", handleButtonClick));
+
         setInterval(updateCountdowns, 1000); // Aktualizace každou sekundu
         updateCountdowns(); // Inicializace
     </script>
