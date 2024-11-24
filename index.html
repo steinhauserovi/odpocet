@@ -10,14 +10,25 @@
             text-align: center;
             padding: 20px;
         }
-        .countdown {
-            margin: 20px 0;
+        .countdown-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
         }
-        h1, h2 {
+        .countdown {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: 200px;
+            text-align: center;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
             color: #333;
         }
         .time {
-            font-size: 1.5em;
+            font-size: 1.2em;
             color: #007BFF;
         }
         .format-selector {
@@ -38,15 +49,16 @@
             <option value="years">Roky (desetinná)</option>
         </select>
     </div>
-    <div id="countdowns">
+    <div id="countdowns" class="countdown-container">
         <!-- Odpočty budou generovány zde -->
     </div>
 
     <script>
         const countdownData = [
-            { title: "Nový rok", date: "2025-01-01T00:00:00" },
-            { title: "Moje narozeniny", date: "2024-06-15T00:00:00" },
-            { title: "Prázdniny", date: "2024-07-01T00:00:00" }
+            { title: "Vánoce", date: "12-24", recurring: true },
+            { title: "Janka narozeniny", date: "05-17", recurring: true },
+            { title: "Václav narozeniny", date: "05-07", recurring: true },
+            { title: "První dítě", date: "2026-08-07", recurring: false }
         ];
 
         const formatSelector = document.getElementById("format");
@@ -58,7 +70,21 @@
 
             countdownData.forEach(event => {
                 const now = new Date();
-                const targetDate = new Date(event.date);
+                let targetDate;
+
+                if (event.recurring) {
+                    // Pokud je událost opakující se, vytvořte datum pro aktuální nebo příští rok
+                    const currentYear = now.getFullYear();
+                    targetDate = new Date(`${currentYear}-${event.date}`);
+                    if (targetDate < now) {
+                        // Pokud již proběhla, nastavte na příští rok
+                        targetDate = new Date(`${currentYear + 1}-${event.date}`);
+                    }
+                } else {
+                    // Neopakující se událost
+                    targetDate = new Date(event.date);
+                }
+
                 const timeDiff = targetDate - now;
 
                 if (timeDiff > 0) {
