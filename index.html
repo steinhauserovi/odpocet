@@ -10,48 +10,30 @@
             text-align: center;
             padding: 20px;
             background-color: #f9f9f9;
-            min-height: 100vh; /* Celá výška okna */
             margin: 0;
-            overflow: hidden; /* Skryje posuvníky */
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-between;
+            justify-content: flex-start;
+            min-height: 100vh;
         }
-        .countdown-container {
-            display: flex;
-            flex-wrap: wrap; /* Zajištění přetékání na další řádky */
-            justify-content: center;
-            gap: 20px;
-            max-width: 100%; /* Maximální šířka */
-            overflow: auto; /* Povolení horizontálního přetékání při hodně prvcích */
-        }
-        .countdown {
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 15px;
-            width: 200px;
-            text-align: center;
-            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
-            color: white;
-            flex: 1 0 200px; /* Flexibilní šířka s minimem 200px */
-        }
+
         h1 {
             color: #333;
+            margin-bottom: 10px;
+            font-size: 1.8em;
         }
-        .time {
-            font-size: 1.2em;
-            font-weight: bold;
-        }
+
         .button-container, .rounding-container {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            flex-wrap: wrap; /* Přetékání na další řádky u tlačítek */
             gap: 10px;
             margin: 10px;
         }
+
         .button-container button, .rounding-container button {
-            padding: 10px 20px;
+            padding: 10px 15px;
             border: none;
             border-radius: 5px;
             background-color: #007BFF;
@@ -60,31 +42,101 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .button-container button:hover, .rounding-container button:hover {
             background-color: #0056b3;
         }
+
         .button-container button.active, .rounding-container button.active {
             background-color: #0056b3;
         }
+
+        .countdown-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+
+        .countdown {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            background-color: #ffffff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            flex: 1 0 calc(50% - 20px); /* Polovina šířky s mezerami */
+            max-width: 200px;
+            color: #333;
+        }
+
+        .time {
+            font-size: 1em;
+            font-weight: bold;
+            color: #007BFF;
+        }
+
+        /* Barvy pro různé události */
+        .countdown.novy-rok {
+            background-color: #FFEEEE;
+        }
+
+        .countdown.vanoce {
+            background-color: #EEFFEE;
+        }
+
+        .countdown.narozeniny {
+            background-color: #E0F7FA;
+        }
+
+        .countdown.specialni {
+            background-color: #FFF8E1;
+            color: black;
+        }
+
         .footer {
             margin-top: auto;
             padding: 10px;
             font-size: 0.9em;
             color: #666;
         }
-        /* Barvy pro různé události */
-        .countdown.novy-rok {
-            background-color: #FF5733;
+
+        /* Responsivní design */
+        @media (max-width: 768px) {
+            .countdown {
+                flex: 1 0 calc(100% - 20px); /* Plná šířka na menších zařízeních */
+            }
+
+            h1 {
+                font-size: 1.5em;
+            }
+
+            .button-container button, .rounding-container button {
+                font-size: 0.9em;
+                padding: 8px 12px;
+            }
         }
-        .countdown.vanoce {
-            background-color: #28A745;
-        }
-        .countdown.narozeniny {
-            background-color: #17A2B8;
-        }
-        .countdown.specialni {
-            background-color: #FFC107;
-            color: black;
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.2em;
+            }
+
+            .button-container button, .rounding-container button {
+                font-size: 0.8em;
+                padding: 6px 10px;
+            }
+
+            .countdown {
+                padding: 8px;
+            }
+
+            .time {
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
