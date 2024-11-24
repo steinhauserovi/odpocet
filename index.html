@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odpočty</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .countdown {
+            margin: 20px 0;
+        }
+        h1, h2 {
+            color: #333;
+        }
+        .time {
+            font-size: 1.5em;
+            color: #007BFF;
+        }
+        .format-selector {
+            margin: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Odpočty do různých dat</h1>
+    <div class="format-selector">
+        <label for="format">Vyberte formát zobrazení:</label>
+        <select id="format">
+            <option value="default">Standardní (dny, hodiny, minuty, sekundy)</option>
+            <option value="hours">Hodiny (desetinná)</option>
+            <option value="days">Dny (desetinná)</option>
+            <option value="weeks">Týdny (desetinná)</option>
+            <option value="months">Měsíce (desetinná)</option>
+            <option value="years">Roky (desetinná)</option>
+        </select>
+    </div>
+    <div id="countdowns">
+        <!-- Odpočty budou generovány zde -->
+    </div>
+
+    <script>
+        const countdownData = [
+            { title: "Nový rok", date: "2025-01-01T00:00:00" },
+            { title: "Moje narozeniny", date: "2024-06-15T00:00:00" },
+            { title: "Prázdniny", date: "2024-07-01T00:00:00" }
+        ];
+
+        const formatSelector = document.getElementById("format");
+
+        function updateCountdowns() {
+            const container = document.getElementById("countdowns");
+            container.innerHTML = '';
+            const selectedFormat = formatSelector.value;
+
+            countdownData.forEach(event => {
+                const now = new Date();
+                const targetDate = new Date(event.date);
+                const timeDiff = targetDate - now;
+
+                if (timeDiff > 0) {
+                    const seconds = timeDiff / 1000;
+                    const minutes = seconds / 60;
+                    const hours = minutes / 60;
+                    const days = hours / 24;
+                    const weeks = days / 7;
+                    const months = days / 30.44; // průměrná délka měsíce
+                    const years = days / 365.25; // průměrná délka roku
+
+                    let timeDisplay = '';
+
+                    switch (selectedFormat) {
+                        case "hours":
+                            timeDisplay = `${hours.toFixed(2)} hodin`;
+                            break;
+                        case "days":
+                            timeDisplay = `${days.toFixed(2)} dní`;
+                            break;
+                        case "weeks":
+                            timeDisplay = `${weeks.toFixed(2)} týdnů`;
+                            break;
+                        case "months":
+                            timeDisplay = `${months.toFixed(2)} měsíců`;
+                            break;
+                        case "years":
+                            timeDisplay = `${years.toFixed(2)} let`;
+                            break;
+                        default:
+                            const remainingDays = Math.floor(days);
+                            const remainingHours = Math.floor(hours % 24);
+                            const remainingMinutes = Math.floor(minutes % 60);
+                            const remainingSeconds = Math.floor(seconds % 60);
+                            timeDisplay = `${remainingDays} dní ${remainingHours} hodin ${remainingMinutes} minut ${remainingSeconds} sekund`;
+                    }
+
+                    const countdownHTML = `
+                        <div class="countdown">
+                            <h2>${event.title}</h2>
+                            <p class="time">${timeDisplay}</p>
+                        </div>
+                    `;
+                    container.innerHTML += countdownHTML;
+                } else {
+                    container.innerHTML += `
+                        <div class="countdown">
+                            <h2>${event.title}</h2>
+                            <p class="time">Událost již proběhla!</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        formatSelector.addEventListener("change", updateCountdowns);
+        setInterval(updateCountdowns, 1000); // Aktualizace každou sekundu
+        updateCountdowns(); // Inicializace
+    </script>
+</body>
+</html>
